@@ -40,4 +40,8 @@ private:
 	vector<string> relativedir;
 };
 
+#ifdef TARGET_RECOVERY_IS_MULTIROM
+extern TWExclude du;
+#endif //TARGET_RECOVERY_IS_MULTIROM
+
 #endif

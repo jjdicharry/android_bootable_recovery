@@ -74,6 +74,11 @@ ifeq ($(TW_ROUND_SCREEN), true)
     LOCAL_CFLAGS += -DTW_ROUND_SCREEN
 endif
 
+#MultiROM
+ifeq ($(TARGET_RECOVERY_IS_MULTIROM), true)
+    LOCAL_CFLAGS += -DTARGET_RECOVERY_IS_MULTIROM
+endif
+
 LOCAL_C_INCLUDES += \
     bionic \
     system/core/include \
@@ -120,6 +125,20 @@ TWRP_RES += $(commands_recovery_local_path)/gui/theme/common/languages
 ifeq ($(TW_EXTRA_LANGUAGES),true)
     TWRP_RES += $(commands_recovery_local_path)/gui/theme/extra-languages/fonts
     TWRP_RES += $(commands_recovery_local_path)/gui/theme/extra-languages/languages
+endif
+
+ifeq ($(TW_CUSTOM_THEME),)
+ifeq ($(TARGET_RECOVERY_IS_MULTIROM),true)
+    MR_THEME := $(DEVICE_RESOLUTION)
+    ifeq ($(filter-out 1440x2560 720x1280,$(MR_THEME)),)
+        MR_THEME := 1080x1920
+    endif
+
+    TW_CUSTOM_THEME := $(commands_recovery_local_path)/gui/themes_multirom/$(MR_THEME)
+    ifeq ($(wildcard $(TW_CUSTOM_THEME)/ui.xml),)
+        $(error MultiROM Theme for resolution $(MR_THEME) is not available!)
+    endif
+endif
 endif
 
 ifeq ($(TW_CUSTOM_THEME),)
